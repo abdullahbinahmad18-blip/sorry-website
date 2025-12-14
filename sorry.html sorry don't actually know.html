@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noarchive, nosnippet, noindex">
+  <title>I'm Really Sorry</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #ffd6e0, #fff1c1);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .card {
+      background: #ffffff;
+      padding: 35px;
+      border-radius: 20px;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+      text-align: center;
+      max-width: 450px;
+      width: 100%;
+    }
+    h1 { margin-bottom: 10px; color: #ff4d6d; }
+    p { color: #555; margin-bottom: 20px; font-size: 16px; }
+    .bear {
+      font-size: 80px;
+      cursor: pointer;
+      margin-bottom: 10px;
+      animation: bounce 2s infinite;
+    }
+    @keyframes bounce { 0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);} }
+    .hint { font-size: 14px; color: #777; margin-bottom: 20px; }
+    .buttons { display: flex; justify-content: center; gap: 20px; }
+    button {
+      padding: 12px 30px;
+      font-size: 16px;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    button:hover { transform: scale(1.08); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+    .yes { background: #38b000; color: #fff; }
+    .no { background: #ff4d6d; color: #fff; }
+    .message { margin-top: 20px; color: #333; font-size: 16px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="bear" onclick="playBearVoice()">🧸</div>
+    <div class="hint">Tap the teddy bear 🧸</div>
+
+    <h1>I'm Really Sorry</h1>
+    <p>Please forgive me. Will you say yes?</p>
+
+    <div class="buttons">
+      <button class="yes" onclick="yesClick()">Yes 💖</button>
+      <button class="no" onclick="noClick()">No 😢</button>
+    </div>
+
+    <div class="message" id="message"></div>
+  </div>
+
+  <script>
+    let yesCount = 0;
+    let noCount = 0;
+
+    const yesMessages = [
+      "Thank you! Please continue pressing Yes for more.",
+      "Thank you, you are a very good person!",
+      "You are a kindhearted person, please press twice more to continue.",
+      "Thank you, you are really a gem!",
+      "I love you so much ❤️🫠"
+    ];
+
+    const noMessages = [
+      "Please forgive me.",
+      "Please please please be agree.",
+      "I am really sorry, I am really shameful, please agree to talk to me right now.",
+      "Sorry, sorry, please please be agreed, be agreed please." // will repeat for 5th to 60th
+    ];
+
+    function speak(msg, slow=false) {
+      const utter = new SpeechSynthesisUtterance(msg);
+      utter.pitch = 1.1;
+      utter.rate = slow ? 0.6 : 0.9; // slow voice for No
+      utter.voice = window.speechSynthesis.getVoices().find(v => v.name.includes('Female') || v.name.includes('Samantha') || v.name.includes('Karen')) || null;
+      window.speechSynthesis.speak(utter);
+    }
+
+    function yesClick() {
+      yesCount++;
+      let msg = "";
+      if (yesCount <= 5) {
+        msg = yesMessages[yesCount-1];
+      } else {
+        msg = "Thank you ❤️";
+      }
+      document.getElementById("message").innerText = msg;
+      speak(msg);
+    }
+
+    function noClick() {
+      noCount++;
+      let msg = "";
+      if (noCount === 1) msg = noMessages[0];
+      else if (noCount === 2) msg = noMessages[1];
+      else if (noCount === 3) msg = noMessages[2];
+      else if (noCount >= 4 && noCount <= 60) msg = noMessages[3];
+      else msg = noMessages[3];
+      
+      alert(msg); // popup message
+      speak(msg, true);
+      if(noCount>=60) noCount=60; // cap at 60
+    }
+
+    function playBearVoice() {
+      const msg = "I am really sorry. Please forgive me.";
+      speak(msg);
+    }
+
+    // preload voices
+    window.speechSynthesis.onvoiceschanged = () => { window.speechSynthesis.getVoices(); }
+  </script>
+</body>
+</html>
+If I text command V
